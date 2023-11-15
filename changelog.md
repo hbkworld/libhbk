@@ -1,5 +1,8 @@
 # Changelog for libhbk
 
+# v1.0.71
+- Fixed minor issue in lib/CMakeLists.txt
+
 # v1.0.67
 - Trim " \t\n\r\f\v" instead of just ' '
 
