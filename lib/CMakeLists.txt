@@ -87,7 +87,7 @@ else()
 endif()
 
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
-    target_link_libraries(${PROJECT_NAME} Ws2_32 Iphlpapi)
+    target_link_libraries(${PROJECT_NAME} PUBLIC Ws2_32 Iphlpapi)
 endif()
 
 
