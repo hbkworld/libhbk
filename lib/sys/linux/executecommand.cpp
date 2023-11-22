@@ -27,9 +27,6 @@
 #include <string>
 #include <array>
 
-#ifdef _STANDARD_HARDWARE
-	#include <iostream>
-#endif
 #include <stdexcept>
 
 #include <sys/types.h>
