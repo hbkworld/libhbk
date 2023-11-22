@@ -28,7 +28,7 @@
 namespace hbk {
 	namespace string {
 		/// Default whitespace characters
-		static const char* trim_ws = " \t\n\r\f\v";
+		static const char trim_ws[] = " \t\n\r\f\v";
 
 		/// right and left trim of default whitespace characters
 		std::string trim_copy(std::string text);
