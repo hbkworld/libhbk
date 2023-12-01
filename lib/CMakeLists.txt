@@ -81,9 +81,9 @@ add_library(${PROJECT_NAME} ${HBKLIB_SOURCES})
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 if(HBK_HARDWARE)
-    target_compile_definitions(${PROJECT_NAME} PUBLIC -D_HBK_HARDWARE)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE -D_HBK_HARDWARE)
 else()
-    target_compile_definitions(${PROJECT_NAME} PUBLIC -D_STANDARD_HARDWARE)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE -D_STANDARD_HARDWARE)
 endif()
 
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
