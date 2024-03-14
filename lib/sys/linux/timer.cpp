@@ -59,6 +59,11 @@ namespace hbk {
 			, m_eventLoop(src.m_eventLoop)
 			, m_eventHandler(src.m_eventHandler)
 		{
+			// reroute epoll event handling!
+			if (m_eventLoop.addEvent(m_fd, std::bind(&Timer::process, this))<0) {
+				throw hbk::exception::exception("could not add timer to event loop");
+			}
+			src.m_fd = -1;
 		}
 
 		Timer::~Timer()
