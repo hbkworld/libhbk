@@ -37,7 +37,7 @@ namespace hbk {
 		public:
 			/// \throws hbk::exception
 			Notifier(EventLoop& eventLoop);
-			Notifier(Notifier&& src) = default;
+			Notifier(Notifier&& src);
 
 			virtual ~Notifier();
 

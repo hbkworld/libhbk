@@ -68,13 +68,6 @@ static void notifierIncrement(unsigned int& value)
 
 
 
-static void decrementCounter(unsigned int &counter, std::promise <void > &notifier)
-{
-	--counter;
-	if (counter==0) {
-		notifier.set_value();
-	}
-}
 
 
 TEST(eventloop, check_leak)
@@ -243,8 +236,9 @@ TEST(eventloop, notify_test)
 	unsigned int notificationCount = 0;
 	//static const std::chrono::milliseconds duration(100);
 	hbk::sys::EventLoop eventLoop;
-	hbk::sys::Notifier notifier(eventLoop);
-	notifier.set(std::bind(&notifierIncrement, std::ref(notificationCount)));
+	hbk::sys::Notifier notifierSource(eventLoop);
+	notifierSource.set(std::bind(&notifierIncrement, std::ref(notificationCount)));
+	hbk::sys::Notifier notifier = std::move(notifierSource);
 	ASSERT_EQ(notificationCount, 0);
 
 	std::thread worker(std::bind(&hbk::sys::EventLoop::execute, &eventLoop));
@@ -540,7 +534,7 @@ TEST(eventloop, add_and_remove_event_test)
 }
 TEST(eventloop, add_and_remove_many_events_test)
 {
-	using Notifiers = std::vector < std::unique_ptr < hbk::sys::Notifier > >;
+	using Notifiers = std::vector < hbk::sys::Notifier >;
 	static const unsigned int cycleCount = 10;
 	static const unsigned int notifierCount = 1000;
 	hbk::sys::EventLoop eventLoop;
@@ -565,15 +559,22 @@ TEST(eventloop, add_and_remove_many_events_test)
 	std::promise < void > promise;
 	auto f = promise.get_future();
 
+	auto decrementCounterCb = [&]()
+	{
+		--counter;
+		if (counter==0) {
+			promise.set_value();
+		}
+	};
 
 	for (unsigned int cycle = 0; cycle < cycleCount; ++cycle) {
 		for (unsigned int i = 0; i < notifierCount; ++i) {
-			auto notifier = std::make_unique < hbk::sys::Notifier > (eventLoop);
-			notifier->set(std::bind(&decrementCounter, std::ref(counter), std::ref(promise)));
+			hbk::sys::Notifier notifier(eventLoop);
+			notifier.set(decrementCounterCb);
 			notifiers.emplace_back(std::move(notifier));
 		}
 		for (unsigned int i = 0; i < notifierCount; ++i) {
-			notifiers[i]->notify();
+			notifiers[i].notify();
 		}
 		std::future_status status = f.wait_for(std::chrono::milliseconds(100));
 		ASSERT_TRUE(status==std::future_status::ready);

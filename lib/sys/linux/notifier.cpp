@@ -51,6 +51,18 @@ namespace hbk {
 			}
 		}
 
+		Notifier::Notifier(Notifier &&src)
+			: m_fd(src.m_fd)
+			, m_eventLoop(src.m_eventLoop)
+			, m_eventHandler(src.m_eventHandler)
+		{
+			// reroute epoll event handling!
+			if (m_eventLoop.addEvent(m_fd, std::bind(&Notifier::process, this))<0) {
+				throw hbk::exception::exception("could not add notifier to event loop");
+			}
+			src.m_fd = -1;
+		}
+
 		Notifier::~Notifier()
 		{
 			m_eventLoop.eraseEvent(m_fd);
