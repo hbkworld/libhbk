@@ -24,7 +24,6 @@
 #define _HBK__SYS_NOTIFIER_H
 
 #include "hbk/sys/defines.h"
-#include "hbk/exception/exception.hpp"
 
 namespace hbk {
 	namespace sys {
@@ -37,7 +36,7 @@ namespace hbk {
 		public:
 			/// \throws hbk::exception
 			Notifier(EventLoop& eventLoop);
-			Notifier(Notifier&& src) = default;
+			Notifier(Notifier&& src) = delete;
 
 			virtual ~Notifier();
 

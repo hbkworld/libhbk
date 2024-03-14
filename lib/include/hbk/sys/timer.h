@@ -27,7 +27,6 @@
 #include <functional>
 #include <chrono>
 
-#include "hbk/exception/exception.hpp"
 #include "hbk/sys/defines.h"
 #include "hbk/sys/eventloop.h"
 
@@ -45,7 +44,7 @@ namespace hbk {
 
 			/// \throws hbk::exception
 			Timer(EventLoop& eventLoop);
-			Timer(Timer&& src) = default;
+			Timer(Timer&& src) = delete;
 
 			~Timer();
 
