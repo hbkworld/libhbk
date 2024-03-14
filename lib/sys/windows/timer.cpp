@@ -54,10 +54,14 @@ namespace hbk {
 			, m_eventLoop(src.m_eventLoop)
 			, m_eventHandler(src.m_eventHandler)
 		{
+			src.m_fd.completionPort = INVALID_HANDLE_VALUE
 		}
 
 		Timer::~Timer()
 		{
+			if (m_fd.completionPort == INVALID_HANDLE_VALUE) {
+				return;
+			}
 			m_eventLoop.eraseEvent(m_fd);
 			if (m_fd.overlapped.hEvent) {
 				DeleteTimerQueueTimer(nullptr, m_fd.overlapped.hEvent, nullptr);

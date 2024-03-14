@@ -40,8 +40,19 @@ namespace hbk {
 			m_eventLoop.addEvent(m_fd, std::bind(&Notifier::process, std::ref(*this)));
 		}
 
+		Notifier::Notifier(Notifier&& src)
+			: m_fd(src.m_fd)
+			, m_eventLoop(src.m_eventLoop)
+			, m_eventHandler(src.m_eventHandler)
+		{
+			src.m_fd.completionPort = INVALID_HANDLE_VALUE
+		}
+
 		Notifier::~Notifier()
 		{
+			if (m_fd.completionPort == INVALID_HANDLE_VALUE) {
+				return;
+			}
 			m_eventLoop.eraseEvent(m_fd);
 			CloseHandle(m_fd.overlapped.hEvent);
 		}
