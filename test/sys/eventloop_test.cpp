@@ -331,14 +331,16 @@ TEST(eventloop, oneshottimer_test)
 	unsigned int counter = 0;
 	bool canceled = false;
 
-	hbk::sys::Timer timer(eventLoop);
+	// construct a time have it move assigned and move constructed
+	hbk::sys::Timer timerSource(eventLoop);
+	timerSource.set(timerCycle, false, std::bind(&timerEventHandlerIncrement, std::placeholders::_1, std::ref(counter), std::ref(canceled)));
+	hbk::sys::Timer timerMiddle = std::move(timerSource);
+	hbk::sys::Timer timer(std::move(timerMiddle));
 	hbk::sys::Timer executionTimer(eventLoop);
-	timer.set(timerCycle, false, std::bind(&timerEventHandlerIncrement, std::placeholders::_1, std::ref(counter), std::ref(canceled)));
 	executionTimer.set(duration, false, std::bind(&executionTimerCb, std::placeholders::_1, std::ref(eventLoop)));
 	int result = eventLoop.execute();
 	ASSERT_EQ(counter, 1);
 	ASSERT_EQ(result, 0);
-
 
 	counter = 0;
 	std::thread worker = std::thread(std::bind(&hbk::sys::EventLoop::execute, std::ref(eventLoop)));

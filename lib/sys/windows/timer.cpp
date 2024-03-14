@@ -49,6 +49,13 @@ namespace hbk {
 			m_fd.completionPort = m_eventLoop.getCompletionPort();
 		}
 
+		Timer::Timer(Timer &&src)
+			: m_fd(src.m_fd)
+			, m_eventLoop(src.m_eventLoop)
+			, m_eventHandler(src.m_eventHandler)
+		{
+		}
+
 		Timer::~Timer()
 		{
 			m_eventLoop.eraseEvent(m_fd);

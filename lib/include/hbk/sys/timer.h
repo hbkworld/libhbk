@@ -45,7 +45,7 @@ namespace hbk {
 
 			/// \throws hbk::exception
 			Timer(EventLoop& eventLoop);
-			Timer(Timer&& src) = default;
+			Timer(Timer&& src);
 
 			~Timer();
 
