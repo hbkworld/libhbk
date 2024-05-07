@@ -26,8 +26,7 @@
 #include <memory>
 #include <string>
 #include <array>
-
-#include <stdexcept>
+#include <vector>
 
 #include <sys/types.h>
 
@@ -50,10 +49,16 @@
 
 namespace hbk {
 	namespace sys {
+		/// Callback for automatic destruction of unique pointer
+		static void closePipe(std::FILE* fp)
+		{
+			pclose(fp);
+		};
+
 		std::string executeCommand(const std::string& command)
 		{
 			std::string retVal;
-			std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(command.c_str(), "r"), pclose);
+			std::unique_ptr<FILE, decltype(&closePipe)> pipe(popen(command.c_str(), "r"), closePipe);
 			if (!pipe) {
 				std::string msg = std::string(__FUNCTION__) + "popen failed (cmd=" + command + ")!";
 				throw hbk::exception::exception(msg);
