@@ -10,6 +10,8 @@ set(INSTALL_GTEST OFF)
 FetchContent_MakeAvailable(googletest)
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+  set(ASAN_COMPILE_FLAGS -fsanitize=address -fno-omit-frame-pointer)
+  set(ASAN_LIB asan)
   set(CGOV_COMPILE_FLAGS -fno-omit-frame-pointer -fno-optimize-sibling-calls -ftest-coverage -fprofile-arcs)
   set(GCOV_LINK_FLAGS -fprofile-arcs -ftest-coverage)
   set(GCOV_LIB gcov)
@@ -57,7 +59,10 @@ add_library(testlib OBJECT
     ../lib/sys/linux/executecommand.cpp
 )
 
-target_link_libraries(testlib PUBLIC hbk::hbk)
+target_link_libraries(testlib
+    PUBLIC
+    ${ASAN_LIB}
+    hbk::hbk)
 
 target_compile_options(testlib PRIVATE
  $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>>:
