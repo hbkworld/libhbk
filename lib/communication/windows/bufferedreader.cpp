@@ -48,13 +48,13 @@ namespace hbk {
 			// check whether there is something left
 			size_t bytesLeft = m_fillLevel - m_alreadyRead;
 			if (bytesLeft >= desiredLen) {
-				memcpy(buf, m_buffer + m_alreadyRead, desiredLen);
+				memcpy(buf, m_buffer.data() + m_alreadyRead, desiredLen);
 				m_alreadyRead += desiredLen;
 				return static_cast <ssize_t> (desiredLen);
 			}
 			else if (bytesLeft > 0) {
 				// return the rest which is less than desired (a short read)
-				memcpy(buf, m_buffer + m_alreadyRead, bytesLeft);
+				memcpy(buf, m_buffer.data() + m_alreadyRead, bytesLeft);
 				m_alreadyRead = m_fillLevel;
 				return static_cast <ssize_t> (bytesLeft);
 			}
@@ -70,7 +70,7 @@ namespace hbk {
 			DWORD numberOfBytesRecvd;
 			buffers[0].buf = reinterpret_cast <CHAR*> (buf);
 			buffers[0].len = static_cast <ULONG> (desiredLen);
-			buffers[1].buf = reinterpret_cast <CHAR*> (m_buffer);
+			buffers[1].buf = reinterpret_cast <CHAR*> (m_buffer.data());
 			buffers[1].len = sizeof(m_buffer);
 
 			int retVal = WSARecv(reinterpret_cast <SOCKET> (ev.fileHandle), buffers, 2, &numberOfBytesRecvd, &Flags, nullptr, nullptr);
