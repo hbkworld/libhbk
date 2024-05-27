@@ -77,7 +77,7 @@ namespace hbk {
 				nullptr,					// User name. nullptr = current user
 				nullptr,                   // User password. nullptr = current
 				0,                      // Locale. nullptr indicates current
-				nullptr,                   // Security flags.
+				0,                   // Security flags.
 				0,                      // Authority (for example, Kerberos)
 				0,                      // Context object 
 				&m_pSvc                   // pointer to IWbemServices proxy
