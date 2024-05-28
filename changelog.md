@@ -1,5 +1,11 @@
 # Changelog for libhbk
 
+# v2.0.3
+- Comple fixes for MSVC 2019
+
+# v2.0.2
+- Disable erroneous default move constructors for notifier and timer
+
 # v2.0.1
 - Solve compiler warning from recent compilers
 - Keep cmake compile definitions private
