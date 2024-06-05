@@ -31,7 +31,7 @@ namespace hbk {
 		static const char trim_ws[] = " \t\n\r\f\v";
 
 		/// right and left trim of default whitespace characters
-		std::string trim_copy(std::string text);
+		std::string trim_copy(const std::string &text);
 
 		/// left trim of default whitespace characters
 		void trim_left(std::string& text);

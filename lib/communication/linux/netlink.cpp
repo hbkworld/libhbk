@@ -46,7 +46,7 @@
 #include "hbk/communication/netlink.h"
 #include "hbk/exception/exception.hpp"
 
-const unsigned int MAX_DATAGRAM_SIZE = 65536;
+constexpr unsigned int MAX_DATAGRAM_SIZE = 65536;
 
 
 namespace hbk {

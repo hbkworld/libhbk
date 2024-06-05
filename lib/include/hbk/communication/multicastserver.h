@@ -51,7 +51,7 @@ typedef int ssize_t;
 namespace hbk {
 	namespace communication {
 		/// The maximum datagram size supported by UDP
-		const unsigned int MAX_DATAGRAM_SIZE = 65536;
+		constexpr unsigned int MAX_DATAGRAM_SIZE = 65536;
 
 		class Netadapter;
 

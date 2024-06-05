@@ -33,7 +33,7 @@ namespace hbk {
 		/// \param text  the string to split
 		/// \param search  the string to search for in the text
 		std::string replace(std::string text, char search, char substitute);
-		std::string replace(std::string text, std::string search, std::string substitute);
+		std::string replace(std::string text, const std::string &search, const std::string& substitute);
 	}
 }
 #endif // __HBK__STRING__REPLACE_H

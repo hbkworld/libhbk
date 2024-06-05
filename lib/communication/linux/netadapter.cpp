@@ -55,8 +55,8 @@ namespace hbk {
 						unsigned long destination, gateway, mask;
 						unsigned int flags;
 						int refCnt, use, metric, mtu, window, irtt;
-						static const int ROUTE_GW = 0x0002;
-						static const int ROUTE_UP = 0x0001;
+						constexpr int ROUTE_GW = 0x0002;
+						constexpr int ROUTE_UP = 0x0001;
 
 						result = ::fscanf(fp, "%63s%8lx%8lx%8X%8d%8d%8d%8lx%8d%8d%8d\n",
 							deviceName, &destination, &gateway, &flags, &refCnt, &use, &metric, &mask,
