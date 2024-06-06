@@ -45,7 +45,7 @@
 #include "hbk/communication/socketnonblocking.h"
 
 /// Maximum time to wait for connecting
-static const time_t TIMEOUT_CONNECT_S = 5;
+constexpr time_t TIMEOUT_CONNECT_S = 5;
 
 
 //#define WRITEV_TEST

@@ -27,7 +27,7 @@
 
 namespace hbk {
 	namespace string {
-		std::string trim_copy(std::string text)
+		std::string trim_copy(const std::string& text)
 		{
 			std::string::size_type start = text.find_first_not_of(trim_ws);
 			if (start == std::string::npos) {

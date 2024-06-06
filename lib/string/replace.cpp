@@ -34,7 +34,7 @@ namespace hbk {
 			return text;
 		}
 
-		std::string replace(std::string text, std::string search, std::string substitute)
+		std::string replace(std::string text, const std::string& search, const std::string &substitute)
 		{
 			size_t position = 0;
 			while((position=text.find(search, position))!=std::string::npos) {
