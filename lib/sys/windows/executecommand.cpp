@@ -42,7 +42,7 @@ namespace hbk {
 #ifdef _STANDARD_HARDWARE
 			std::cout << command << " ";
 
-			for(params_t::const_iterator iter = params.begin(); iter!=params.end(); ++iter) {
+			for(params_t::const_iterator iter = params.cbegin(); iter!=params.cend(); ++iter) {
 				std::cout << *iter << " ";
 			}
 

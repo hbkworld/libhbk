@@ -19,7 +19,7 @@ namespace hbk {
 			}
 			std::string line;
 			std::getline(file, line);
-			line.erase(std::find(line.begin(), line.end(), '\0'), line.end());
+			line.erase(std::find(line.cbegin(), line.cend(), '\0'), line.cend());
 			file.close();
 			return line;
 		}

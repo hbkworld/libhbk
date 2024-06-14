@@ -154,7 +154,7 @@ TEST(communication, start_send_stop_test)
 	hbk::communication::NetadapterList adapters;
 	hbk::communication::MulticastServer mcsReceiver(adapters, eventloop);
 	hbk::communication::MulticastServer mcsSender(adapters, eventloop);
-	hbk::communication::Netadapter firstadapter = adapters.get().begin()->second;
+	hbk::communication::Netadapter firstadapter = adapters.get().cbegin()->second;
 
 	result = mcsSender.start(MULTICASTGROUP, UDP_PORT, std::bind(&receiveAndDiscard, std::placeholders::_1));
 	ASSERT_EQ(result,0);

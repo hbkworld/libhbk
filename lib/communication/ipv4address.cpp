@@ -51,7 +51,7 @@ namespace hbk {
 		{
 			static const std::string apipaNet("169.254");
 
-			auto count = std::count(address.begin(), address.end(), '.');
+			auto count = std::count(address.cbegin(), address.cend(), '.');
 			if (count!=3) {
 				return false;
 			}
@@ -65,7 +65,7 @@ namespace hbk {
 
 		bool Ipv4Address::isValidManualAddress(const std::string& ip)
 		{
-			auto count = std::count(ip.begin(), ip.end(), '.');
+			auto count = std::count(ip.cbegin(), ip.cend(), '.');
 			if (count!=3) {
 				return false;
 			}
@@ -102,7 +102,7 @@ namespace hbk {
 
 		bool Ipv4Address::isValidNetmask(const std::string& ip)
 		{
-			auto count = std::count(ip.begin(), ip.end(), '.');
+			auto count = std::count(ip.cbegin(), ip.cend(), '.');
 			if (count!=3) {
 				return false;
 			}
