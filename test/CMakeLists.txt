@@ -2,12 +2,26 @@ cmake_minimum_required(VERSION 3.13)
 
 include(FetchContent)
 
-FetchContent_Declare(
-    googletest
-    URL https://github.com/google/googletest/archive/v1.12.0.zip
-)
-set(INSTALL_GTEST OFF)
-FetchContent_MakeAvailable(googletest)
+set(GTest_REQUIREDVERSION "1.12.0")
+
+find_package(GTest ${GTest_REQUIREDVERSION} )
+
+if(GTest_FOUND)
+  message(STATUS "Found GTest: ${GTest_VERSION} ${GTest_CONFIG}")
+else()
+  message(STATUS "Fetching GTest ${GTest_REQUIREDVERSION}...")
+  include(FetchContent)
+  set(GTest_WITH_POST_BUILD_UNITTEST OFF)
+  set(GTest_WITH_TESTS OFF)
+  set(INSTALL_GTest OFF)
+  set(BUILD_GMOCK OFF)
+  FetchContent_Declare(
+    GTest
+    URL https://github.com/google/googletest/archive/release-${GTest_REQUIREDVERSION}.zip
+  )
+  FetchContent_MakeAvailable(GTest)
+endif()
+
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   set(ASAN_COMPILE_FLAGS -fsanitize=address -fno-omit-frame-pointer)
