@@ -63,7 +63,7 @@ TEST(ipv6address, check_equal)
 	ASSERT_TRUE(address1.equal(address2));
 	
 	// check case insentive
-	std::transform(address2.address.begin(), address2.address.end(), address2.address.begin(), 
+	std::transform(address2.address.cbegin(), address2.address.cend(), address2.address.begin(),
 								 [](unsigned char c){ return std::toupper(c); }
 								);
 	ASSERT_TRUE(address1.equal(address2));

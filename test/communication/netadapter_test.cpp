@@ -37,11 +37,11 @@ TEST(communication, get_adapter_by_x)
 		return;
 	}
 	
-	std::string adapterName = adapters.begin()->second.getName();
+	std::string adapterName = adapters.cbegin()->second.getName();
 	hbk::communication::Netadapter adapter = hbk::communication::NetadapterList().getAdapterByName(adapterName);
 	ASSERT_EQ(adapterName, adapter.getName());
 	
-	unsigned int adapterIndex = adapters.begin()->second.getIndex();
+	unsigned int adapterIndex = adapters.cbegin()->second.getIndex();
 	adapter = hbk::communication::NetadapterList().getAdapterByInterfaceIndex(adapterIndex);
 	ASSERT_EQ(adapterName, adapter.getName());
 	
@@ -57,7 +57,7 @@ TEST(communication, check_mac_address)
 		return;
 	}
 	
-	std::string macAddress = adapters.begin()->second.getMacAddressString();
+	std::string macAddress = adapters.cbegin()->second.getMacAddressString();
 	ASSERT_GT(macAddress.length(), 0);
 	hbk::string::tokens tokens = hbk::string::split(macAddress, ':');
 	ASSERT_EQ(tokens.size(), 6);
@@ -74,7 +74,7 @@ TEST(communication, check_occupied_subnet)
 	// get the first active adapter.
 	hbk::communication::Netadapter adapter;
 	hbk::communication::NetadapterList::Adapters adapters = netadapterList.get();
-	for( hbk::communication::NetadapterList::Adapters::const_iterator iter=adapters.begin(); iter!=adapters.end(); ++iter) {
+	for( hbk::communication::NetadapterList::Adapters::const_iterator iter=adapters.cbegin(); iter!=adapters.cend(); ++iter) {
 		adapter = iter->second;
 		addresses = adapter.getIpv4Addresses();
 		if (addresses.empty()==false) {
@@ -88,9 +88,9 @@ TEST(communication, check_occupied_subnet)
 	}
 
 	hbk::communication::NetadapterList::AdapterArray adapterArray = netadapterList.getArray();
-	ASSERT_EQ(adapters.begin()->second.getIndex(), adapterArray[0].getIndex());
+	ASSERT_EQ(adapters.cbegin()->second.getIndex(), adapterArray[0].getIndex());
 
-	hbk::communication::Ipv4Address firstAddress = *addresses.begin();
+	hbk::communication::Ipv4Address firstAddress = *addresses.cbegin();
 	interfaceName = adapter.getName();
 	
 	occupyingInterfaceName = netadapterList.checkSubnet("", firstAddress);

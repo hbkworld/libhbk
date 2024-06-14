@@ -81,7 +81,7 @@ namespace hbk {
 			}
 
 			std::string ipv4Address = address.substr(hybridIpv4AddressPrefix.length());
-			auto count = std::count(ipv4Address.begin(), ipv4Address.end(), '.');
+			auto count = std::count(ipv4Address.cbegin(), ipv4Address.cend(), '.');
 			if (count!=3) {
 				return "";
 			}
@@ -133,7 +133,7 @@ namespace hbk {
 //#endif
 
 			std::string prefix = address.substr(0, ipv6LinkLocalNet.length());
-			std::transform(prefix.begin(), prefix.end(), prefix.begin(), ::tolower);
+			std::transform(prefix.cbegin(), prefix.cend(), prefix.begin(), ::tolower);
 			if (prefix!=ipv6LinkLocalNet) {
 				return false;
 			}
