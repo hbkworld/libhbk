@@ -88,12 +88,21 @@ namespace hbk {
 			return 0;
 		}
 
-		int TcpServer::start(const std::string& path, int backlog, Cb_t acceptCb)
+		int TcpServer::start(const std::string& path, bool useAbstractNamespace, int backlog, Cb_t acceptCb)
 		{
 			sockaddr_un address;
 			memset(&address, 0, sizeof(address));
 			address.sun_family = AF_UNIX;
-			strncpy(address.sun_path, path.c_str(), sizeof(address.sun_path)-1);
+
+			size_t serveraddrLen;
+			if(useAbstractNamespace) {
+				serveraddrLen = 1+strlen(path.c_str())+sizeof(address.sun_family);
+				strncpy(&address.sun_path[1], path.c_str(), sizeof(address.sun_path)-2);
+			} else {
+				serveraddrLen = strlen(path.c_str())+sizeof(address.sun_family);
+				strncpy(address.sun_path, path.c_str(), sizeof(address.sun_path)-1);
+			}
+
 			m_listeningEvent = ::socket(AF_UNIX, SOCK_STREAM | SOCK_NONBLOCK, 0);
 			if (m_listeningEvent==-1) {
 				::syslog(LOG_ERR, "server: Socket initialization failed '%s'", strerror(errno));
@@ -108,7 +117,7 @@ namespace hbk {
 			}
 
 			::unlink(path.c_str());
-			if (::bind(m_listeningEvent, reinterpret_cast<sockaddr*>(&address), sizeof(address)) == -1) {
+			if (::bind(m_listeningEvent, reinterpret_cast<sockaddr*>(&address), serveraddrLen) == -1) {
 				::syslog(LOG_ERR, "server: Binding socket to unix domain socket %s failed '%s'", path.c_str(), strerror(errno));
 				return -1;
 			}

@@ -104,8 +104,9 @@ namespace hbk
 #ifndef _WIN32
 			/// this method does work blocking
 			/// \param path path to unix domain socket
+			/// \param useAbstractNamespace true unix domain socket is in abstract namespace
 			/// \return 0: success; -1: error
-			int connect(const std::string &path);
+			int connect(const std::string &path, bool useAbstractNamespace = true);
 #endif
 
 			/// this method does work blocking

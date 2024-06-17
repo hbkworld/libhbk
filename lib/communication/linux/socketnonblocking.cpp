@@ -228,18 +228,25 @@ int hbk::communication::SocketNonblocking::connect(const std::string &address, c
 	return retVal;
 }
 
-int hbk::communication::SocketNonblocking::connect(const std::string &path)
+int hbk::communication::SocketNonblocking::connect(const std::string &path, bool useAbstractNamespace)
 {
 	struct sockaddr_un sockaddr;
-	/* unix domain socket!
-	 * abstract socket address is distinguished by putting '\0' in the first byte of the address
-	 * addrlen for bind has to be calculated! This includes the address prefix '\0'
-	*/
-	socklen_t serveraddrLen = static_cast < socklen_t > (1+path.length()+sizeof(sockaddr.sun_family));
 	memset(&sockaddr, 0, sizeof(sockaddr));
-
 	sockaddr.sun_family = AF_UNIX;
-	strncpy(&sockaddr.sun_path[1], path.c_str(), sizeof(sockaddr.sun_path)-2);
+
+	socklen_t serveraddrLen;
+	if (useAbstractNamespace) {
+		/* unix domain socket!
+		 * abstract socket address is distinguished by putting '\0' in the first byte of the address
+		 * addrlen for bind has to be calculated! This includes the address prefix '\0'
+		*/
+		serveraddrLen = static_cast < socklen_t > (1+path.length()+sizeof(sockaddr.sun_family));
+		strncpy(&sockaddr.sun_path[1], path.c_str(), sizeof(sockaddr.sun_path)-2);
+	} else {
+		serveraddrLen = static_cast < socklen_t > (path.length()+sizeof(sockaddr.sun_family));
+		strncpy(sockaddr.sun_path, path.c_str(), sizeof(sockaddr.sun_path)-1);
+	}
+
 	int retVal = connect(AF_UNIX, reinterpret_cast < struct sockaddr* > (&sockaddr), serveraddrLen);
 	if (retVal < 0) {
 		syslog(LOG_ERR, "could not connect to unix domain socket '%s': '%s'", path.c_str(), strerror(errno));
