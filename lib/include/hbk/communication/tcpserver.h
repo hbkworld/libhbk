@@ -51,17 +51,20 @@ namespace hbk {
 			TcpServer(sys::EventLoop &eventLoop);
 			virtual ~TcpServer();
 
+			/// Start as TCP server
 			/// @param port TCP port to listen to
 			/// @param backlog Maximum length of the queue of pending connections
 			/// @param acceptCb called when accepting a new tcp client
 			/// \return -1 on error
 			int start(uint16_t port, int backlog, Cb_t acceptCb);
 
+			/// Start as unix domain socket server
 			/// @param path path of unix domain socket to listen to
+			/// \param useAbstractNamespace true unix domain socket is in abstract namespace
 			/// @param backlog Maximum length of the queue of pending connections
 			/// @param acceptCb called when accepting a new tcp client
 			/// \return -1 on error
-			int start(const std::string& path, int backlog, Cb_t acceptCb);
+			int start(const std::string& path, bool useAbstractNamespace, int backlog, Cb_t acceptCb);
 
 			/// Remove this object from the event loop and close the server socket
 			void stop();
@@ -98,7 +101,9 @@ namespace hbk {
 			sys::EventLoop& m_eventLoop;
 			Cb_t m_acceptCb;
 
-			std::string m_path;
+			/// unix domain socket path.
+			/// Not relevant when using abstract namespace
+			std::string m_unixDomainSocketPath;
 		};
 	}
 }

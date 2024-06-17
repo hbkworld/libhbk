@@ -1,5 +1,8 @@
 # Changelog for libhbk
 
+# v2.1.0
+- Linux: Client and server support abstract and non-abstract unix domain socket paths
+
 # v2.0.3
 - Comple fixes for MSVC 2019
 

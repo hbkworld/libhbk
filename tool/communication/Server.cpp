@@ -58,19 +58,29 @@ int main(int argc, char* argv[])
 	}
 
 
+
 	hbk::communication::TcpServer server(eventloop);
 
 	try {
+		// If parameter is a number, this is to be a TCP server listening to that port
 		uint16_t port = static_cast < uint16_t > (std::stoul(argv[1]));
 
 		server.start(port, 1, &cb);
+		std::cout << "Listening to TCP port " << port << "..." << std::endl;
 	} catch(...) {
-		// interprete parameter as unix domain socket name
+		// If parameter is a string, this is to be a unix domain socket server.
+		// Interprete parameter as unix domain socket name
 #ifdef _WIN32
 		std::cerr << "Unix domain sockets are not supported under windoes" << std::endl;
 		return EXIT_FAILURE;
-#else			 
-		server.start(argv[1], 1, &cb);
+#else
+		constexpr bool useAbstractNamespace = false;
+		server.start(argv[1], useAbstractNamespace, 1, &cb);
+		if (useAbstractNamespace) {
+			std::cout << "Listening abstract to unix domain socket path " << argv[1] << "..." << std::endl;
+		} else {
+			std::cout << "Listening to unix domain socket path " << argv[1] << "..." << std::endl;
+		}
 #endif
 	}
 

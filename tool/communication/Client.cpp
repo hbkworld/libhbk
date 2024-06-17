@@ -34,13 +34,21 @@ int main(int argc, char* argv[])
 		std::string address = argv[1];
 
 		retval = client.connect(address, port);
+		std::cout << "Connected to TCP port " << port << "..." << std::endl;
 	} else {
 #ifdef _WIN32
 		std::cerr << "Unix domain sockets are not supported under windoes" << std::endl;
 		return EXIT_FAILURE;
 #else
 		std::string path = argv[1];
-		retval = client.connect(path);
+		constexpr bool useAbstractNamespace = false;
+		retval = client.connect(path, useAbstractNamespace);
+		if (useAbstractNamespace) {
+			std::cout << "Connected to abstract to unix domain socket path " << argv[1] << "..." << std::endl;
+		} else {
+			std::cout << "Connected to unix domain socket path " << argv[1] << "..." << std::endl;
+		}
+
 #endif
 	}
 
