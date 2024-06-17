@@ -101,6 +101,7 @@ namespace hbk {
 			} else {
 				serveraddrLen = strlen(path.c_str())+sizeof(address.sun_family);
 				strncpy(address.sun_path, path.c_str(), sizeof(address.sun_path)-1);
+				::unlink(path.c_str());
 			}
 
 			m_listeningEvent = ::socket(AF_UNIX, SOCK_STREAM | SOCK_NONBLOCK, 0);
@@ -116,16 +117,19 @@ namespace hbk {
 				return -1;
 			}
 
-			::unlink(path.c_str());
 			if (::bind(m_listeningEvent, reinterpret_cast<sockaddr*>(&address), serveraddrLen) == -1) {
 				::syslog(LOG_ERR, "server: Binding socket to unix domain socket %s failed '%s'", path.c_str(), strerror(errno));
 				return -1;
 			}
-			chmod(path.c_str(), 0666); // everyone should have access
+
+			if(!useAbstractNamespace) {
+				chmod(path.c_str(), 0666); // everyone should have access
+				m_unixDomainSocketPath = path;
+			}
 			if (listen(m_listeningEvent, backlog)==-1) {
 				return -1;
 			}
-			m_path = path;
+
 			m_acceptCb = acceptCb;
 			m_eventLoop.addEvent(m_listeningEvent, std::bind(&TcpServer::process, this));
 			return 0;
@@ -135,9 +139,11 @@ namespace hbk {
 		{
 			m_eventLoop.eraseEvent(m_listeningEvent);
 			::close(m_listeningEvent);
-			if (m_path.empty()==false) {
-				// unlink unix domain socket
-				::unlink(m_path.c_str());
+			if (!m_unixDomainSocketPath.empty()) {
+				// unlink non-abstract unix domain socket
+				if(::unlink(m_unixDomainSocketPath.c_str())) {
+					::syslog(LOG_ERR, "server: unlinking %s failed '%s'", m_unixDomainSocketPath.c_str(), strerror(errno));
+				}
 			}
 			m_acceptCb = Cb_t();
 		}

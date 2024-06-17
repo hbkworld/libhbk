@@ -101,7 +101,9 @@ namespace hbk {
 			sys::EventLoop& m_eventLoop;
 			Cb_t m_acceptCb;
 
-			std::string m_path;
+			/// unix domain socket path.
+			/// Not relevant when using abstract namespace
+			std::string m_unixDomainSocketPath;
 		};
 	}
 }
