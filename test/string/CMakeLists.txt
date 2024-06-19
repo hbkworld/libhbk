@@ -22,7 +22,7 @@ foreach(tgt ${targets})
     if (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
       target_link_libraries(${tgt} ${ASAN_LIB} ${GCOV_LIB})
     endif()
-    target_link_libraries(${tgt} ${CMAKE_THREAD_LIBS_INIT} testlib GTest::gtest GTest::gtest_main)
+    target_link_libraries(${tgt} testlib GTest::gtest GTest::gtest_main)
 
     set_target_properties(${tgt} PROPERTIES
       LINK_FLAGS "${EXTRA_LINK_FLAGS}"

@@ -47,7 +47,7 @@ foreach(tgt ${targets})
     elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
         target_link_libraries(${tgt} Ws2_32)
     endif()
-    target_link_libraries(${tgt} ${CMAKE_THREAD_LIBS_INIT} testlib GTest::gtest GTest::gtest_main)
+    target_link_libraries(${tgt} Threads::Threads testlib GTest::gtest GTest::gtest_main)
 
     set_target_properties(${tgt} PROPERTIES
       LINK_FLAGS "${EXTRA_LINK_FLAGS}"
