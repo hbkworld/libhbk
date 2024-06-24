@@ -88,7 +88,7 @@ TEST(communication, check_occupied_subnet)
 	}
 
 	hbk::communication::NetadapterList::AdapterArray adapterArray = netadapterList.getArray();
-	ASSERT_EQ(adapters.cbegin()->second.getIndex(), adapterArray[0].getIndex());
+	ASSERT_EQ(adapters.cbegin()->second.getIndex(), adapterArray.front().getIndex());
 
 	hbk::communication::Ipv4Address firstAddress = *addresses.cbegin();
 	interfaceName = adapter.getName();

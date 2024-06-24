@@ -50,7 +50,7 @@ namespace hbk {
 			std::string::size_type end = text.find_last_not_of(trim_ws);
 			if (end == std::string::npos) {
 				// special case: the only character does match!
-				if (text[0]==' ') {
+				if (text.front()==' ') {
 					text.clear();
 				}
 				return;
@@ -75,7 +75,7 @@ namespace hbk {
 			std::string::size_type end = text.find_last_not_of(ch);
 			if (end == std::string::npos) {
 				// special case: the only character does match!
-				if (text[0]==ch) {
+				if (text.front()==ch) {
 					text.clear();
 				}
 				return;
