@@ -44,7 +44,7 @@ namespace hbk {
 							remove(path.c_str());
 							content = "a string";
 							std::vector < uint8_t > binaryContent(content.length()+1);
-							memcpy(&binaryContent[0], content.c_str(), content.length());
+							memcpy(binaryContent.data(), content.c_str(), content.length());
 							binaryContent[content.length()] = '\0';
 							
 							// insert '\0'
@@ -52,7 +52,7 @@ namespace hbk {
 							
 							std::ofstream file;
 							file.open(path);
-							file.write(reinterpret_cast< char* >(&binaryContent[0]), binaryContent.size());
+							file.write(reinterpret_cast< char* >(binaryContent.data()), binaryContent.size());
 							file.close();
 							result = readLineFromFile(path);
 							std::string contentPart = content.substr(0, content.size()/2);

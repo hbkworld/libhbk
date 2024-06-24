@@ -416,7 +416,7 @@ ssize_t hbk::communication::SocketNonblocking::sendBlocks(const dataBlocks_t &bl
 	dataBlockVector.reserve(size);
 	std::copy(blocks.cbegin(), blocks.cend(), std::back_inserter(dataBlockVector));
 
-	return sendBlocks(&dataBlockVector[0], size, more);
+	return sendBlocks(dataBlockVector.data(), size, more);
 }
 
 ssize_t hbk::communication::SocketNonblocking::sendBlock(const void* pBlock, size_t size, bool more)

@@ -108,7 +108,7 @@ namespace hbk {
 				throw std::runtime_error("not a valid MAC address");
 			}
 			
-			unsigned int part = std::stoul(tokens[0], 0, 16);
+			unsigned int part = std::stoul(tokens.front(), 0, 16);
 			part ^= 1 << 1;
 			std::stringstream linkLocalAddressStream;
 			linkLocalAddressStream << std::hex << "fe80::" << part << tokens[1] << ":" << tokens[2] << "ff:fe" << tokens[3] << ":" << tokens[4] << tokens[5];
