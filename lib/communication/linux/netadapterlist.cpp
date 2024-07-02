@@ -52,8 +52,6 @@
 #include "hbk/communication/netadapterlist.h"
 #include "hbk/communication/netadapter.h"
 
-#include "hbk/string/readlinefromfile.h"
-
 namespace hbk {
 	namespace communication {
 		NetadapterList::NetadapterList()
