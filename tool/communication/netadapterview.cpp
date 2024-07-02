@@ -22,6 +22,11 @@ int main()
 		for (const hbk::communication::Ipv6Address& ipV6Address: ipv6addresses) {
 			std::cout << "\t" << ipV6Address.address << "/" << ipV6Address.prefix << std::endl;
 		}
+
+		int masterInterfaceIndex = adapter.getMasterIndex();
+		if (masterInterfaceIndex!=-1) {
+			std::cout << "\t" << adapters[masterInterfaceIndex].getName() << " is master interface" << std::endl;
+		}
 	}
 	return EXIT_SUCCESS;
 }

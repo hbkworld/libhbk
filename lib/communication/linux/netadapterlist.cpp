@@ -22,6 +22,7 @@
 
 #include <cstdint>
 #include <cstring>
+#include <fstream>
 #include <iomanip>
 #include <sstream>
 #include <string>
@@ -50,6 +51,8 @@
 
 #include "hbk/communication/netadapterlist.h"
 #include "hbk/communication/netadapter.h"
+
+#include "hbk/string/readlinefromfile.h"
 
 namespace hbk {
 	namespace communication {
@@ -165,6 +168,13 @@ namespace hbk {
 									Adapt.m_name = interface->ifa_name;
 									Adapt.m_macAddress = hardwareInfo.hwAddrString;
 									Adapt.m_fwGuid = hardwareInfo.fwGuid;
+								}
+
+								// try to read "master" interface index. if this succeeds, this interface is marked as "slave"
+								std::string path = "/sys/class/net/" + Adapt.m_name + "/master/ifindex";
+								std::ifstream masterInterfaceIndexFile(path.c_str());
+								if (masterInterfaceIndexFile) {
+									masterInterfaceIndexFile >> Adapt.m_masterIndex;
 								}
 
 								family = interface->ifa_addr->sa_family;
