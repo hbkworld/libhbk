@@ -1,5 +1,8 @@
 # Changelog for libhbk
 
+# v2.2.0
+- Linux: Netadapter new method getMasterIndex() tells about its master interface index
+
 # v2.1.0
 - Linux: Client and server support abstract and non-abstract unix domain socket paths
 
