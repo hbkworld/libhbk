@@ -49,6 +49,7 @@ namespace hbk {
 			, m_macAddress()
 			, m_fwGuid(0)
 			, m_index()
+			, m_masterIndex(-1)
 		{
 		}
 

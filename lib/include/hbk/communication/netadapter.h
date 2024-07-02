@@ -86,6 +86,12 @@ namespace hbk {
 				return m_index;
 			}
 
+			/// \return interface index of master interface. -1 when there is no master interface
+			int getMasterIndex() const
+			{
+				return m_masterIndex;
+			}
+
 			/// \return true if this is a firewire adapter
 			bool isFirewireAdapter() const;
 
@@ -109,6 +115,9 @@ namespace hbk {
 
 			/// interface index
 			unsigned int m_index;
+
+			/// interface index of master device. -1 when there is no master
+			int m_masterIndex;
 		};
 	}
 }
