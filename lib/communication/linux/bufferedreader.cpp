@@ -21,7 +21,6 @@
 // THE SOFTWARE.
 
 #include <cstring>
-#include <stdint.h>
 
 #include <sys/socket.h>
 #include <sys/uio.h>
@@ -48,15 +47,17 @@ namespace hbk {
 				m_alreadyRead += desiredLen;
 				return static_cast < ssize_t > (desiredLen);
 			} else if(bytesLeft>0) {
-				// use what reamins from the last read which is less than desired and read the reamining amount of data
+				// return the rest which is less than desired (a short read)
 				memcpy(buf, m_buffer.data() + m_alreadyRead, bytesLeft);
+				m_alreadyRead = m_fillLevel;
+				return static_cast < ssize_t > (bytesLeft);
 			}
 
-			// try to read as much as possible into the provided buffer. In addition we fill our internal buffer if there is already more to read.
+			// try to read as much as possible into the provided buffer.In addition we fill our internal buffer if there is already more to read.
 			// readv saves us from reading into the internal buffer first and copying into the provided buffer afterwards.
 			struct iovec iov[2];
-			iov[0].iov_base = reinterpret_cast<uint8_t*>(buf) + bytesLeft;
-			iov[0].iov_len = desiredLen - bytesLeft;
+			iov[0].iov_base = buf;
+			iov[0].iov_len = desiredLen;
 			iov[1].iov_base = m_buffer.data();
 			iov[1].iov_len = m_buffer.size();
 

@@ -1,0 +1,130 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      release_name:
+        description: Name of the release (e.g. "v1.2.3")
+        type: string
+        required: true
+      draft:
+        description: Indicator of whether or not this release is a draft
+        type: boolean
+        default: false
+      prerelease:
+        description: Indicator of whether or not is a prerelease
+        type: boolean
+        default: false
+
+jobs:
+
+  build-linux:
+
+    runs-on:
+      group: fusion-devops-k8s
+      labels: fusion-ubuntu
+    container:
+      image: ocr.apps.daq.hbm.com/ghcr/hbkdaq/qtx-framework-ubuntu-2004
+
+    steps:
+
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Build project
+        uses: threeal/cmake-action@v2.1.0
+        with:
+          c-compiler: x86_64-unknown-linux-gnu-gcc
+          cxx-compiler: x86_64-unknown-linux-gnu-g++
+          options: |
+            BUILD_SHARED_LIBS=ON
+            CPACK_DEBIAN_PACKAGE_ARCHITECTURE=amd64
+            CPACK_RPM_PACKAGE_ARCHITECTURE=x86_64
+
+      - name: Build packages
+        working-directory: build
+        run: cpack -G "DEB;RPM;TGZ"
+
+      - name: Upload Debian package
+        uses: actions/upload-artifact@v4
+        with:
+          name: deb
+          path: build/packages/*.deb
+          if-no-files-found: error
+
+      - name: Upload RPM package
+        uses: actions/upload-artifact@v4
+        with:
+          name: rpm
+          path: build/packages/*.rpm
+          if-no-files-found: error
+
+      - name: Upload tarball
+        uses: actions/upload-artifact@v4
+        with:
+          name: tarball
+          path: build/packages/*.tar.gz
+          if-no-files-found: error
+
+  build-windows:
+
+    runs-on:
+      group: fusion-devops-windows
+
+    steps:
+
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Build project
+        uses: threeal/cmake-action@v2.1.0
+        with:
+          options: |
+            BUILD_SHARED_LIBS=ON
+          build-args: |
+            --config
+            Release
+
+      - name: Build packages
+        working-directory: build
+        run: cpack -G "ZIP"
+
+      - name: Upload zip file
+        uses: actions/upload-artifact@v4
+        with:
+          name: zip
+          path: build/packages/*.zip
+          if-no-files-found: error
+
+  release:
+
+    needs: [build-linux, build-windows]
+
+    runs-on:
+      group: fusion-devops-k8s
+      labels: fusion-ubuntu
+    container:
+      image: ocr.apps.daq.hbm.com/ghcr/hbkdaq/qtx-framework-ubuntu-2004
+
+    steps:
+
+      - name: Clean up directory
+        run: |
+          rm -rf ./* || true
+          rm -rf ./.??* || true
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          merge-multiple: true
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: ${{ inputs.release_name || github.ref_name }}
+          draft: ${{ inputs.draft || false }}
+          prerelease: ${{ inputs.prerelease || false }}
+          files: '*'
