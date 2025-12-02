@@ -9,3 +9,5 @@ lib/cmake_install.cmake
 *.a
 *.so*
 build/
+.vs/
+*.vcxproj.user
